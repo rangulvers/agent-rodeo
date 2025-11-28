@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Lego City Builder</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="toolbar">
+        <button id="house">House</button>
+        <button id="road">Road</button>
+        <button id="tree">Tree</button>
+        <button id="water">Water</button>
+        <button id="empty">Empty</button>
+    </div>
+    <div id="scene-container"></div>
+    <div id="bottom">
+        <div id="rules-panel">
+            <h3>City Rules</h3>
+            <div id="rules"></div>
+        </div>
+        <div id="save-load">
+            <button id="save">Save</button>
+            <button id="load">Load</button>
+            <textarea id="json-input" placeholder="Paste JSON here to load"></textarea>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

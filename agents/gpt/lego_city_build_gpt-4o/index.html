@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lego City 3D Builder (GPT gpt-4o)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Three.js (IIFE build) and OrbitControls (matching version) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>Lego City 3D Builder</h1>
+    <div class="sub">Offline-ready after first load • No build step</div>
+  </header>
+
+  <main class="layout">
+    <aside class="left">
+      <section class="panel">
+        <h2>Blocks</h2>
+        <div id="toolbar" class="toolbar" role="radiogroup" aria-label="Block types">
+          <button class="tool active" data-type="house" aria-checked="true" role="radio" title="House (H)">
+            <span class="icon icon-house"></span>
+            <span>House</span>
+          </button>
+          <button class="tool" data-type="road" role="radio" title="Road (R)">
+            <span class="icon icon-road"></span>
+            <span>Road</span>
+          </button>
+          <button class="tool" data-type="tree" role="radio" title="Tree/Park (T)">
+            <span class="icon icon-tree"></span>
+            <span>Tree</span>
+          </button>
+          <button class="tool" data-type="water" role="radio" title="Water (W)">
+            <span class="icon icon-water"></span>
+            <span>Water</span>
+          </button>
+          <button class="tool" data-type="empty" role="radio" title="Erase (E)">
+            <span class="icon icon-erase"></span>
+            <span>Erase</span>
+          </button>
+        </div>
+        <div class="hint">Tip: Click tiles to place; right-drag to orbit.</div>
+        <div class="hotkeys">Hotkeys: H, R, T, W, E</div>
+      </section>
+
+      <section class="panel">
+        <h2>City Rules</h2>
+        <ul id="rules" class="rules" aria-live="polite"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Save & Load</h2>
+        <div class="buttons">
+          <button id="saveBtn">Save (localStorage)</button>
+          <button id="loadBtn">Load</button>
+          <button id="clearBtn">Clear</button>
+        </div>
+        <div class="buttons">
+          <button id="exportBtn">Export JSON</button>
+          <button id="importBtn">Import JSON</button>
+        </div>
+        <textarea id="ioArea" placeholder="Paste JSON here for import, or use Export to copy..." spellcheck="false"></textarea>
+        <div class="hint">Save slot: <code>lego-city-grid-v1</code></div>
+      </section>
+
+      <section class="panel">
+        <h2>View</h2>
+        <div class="buttons">
+          <button id="resetCamBtn">Reset Camera</button>
+          <button id="wireBtn">Toggle Wireframe</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="center">
+      <div id="canvasWrap" class="canvas-wrap">
+        <canvas id="scene"></canvas>
+        <div id="overlayMsg" class="overlay-msg" hidden></div>
+      </div>
+    </section>
+
+    <aside class="right">
+      <section class="panel">
+        <h2>Stats</h2>
+        <ul id="stats" class="stats"></ul>
+      </section>
+      <section class="panel small">
+        <h2>Help</h2>
+        <ul class="help">
+          <li>Left click: place selected block</li>
+          <li>Right-drag: orbit • Middle-drag: pan</li>
+          <li>Middle-drag: pan • Scroll: zoom</li>
+          <li>Erase tool removes a tile</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="app-footer">
+    <div>Built with <a href="https://threejs.org/" target="_blank" rel="noreferrer">Three.js</a>. Runs offline after first load.</div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

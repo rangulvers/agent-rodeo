@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Lego City Builder</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.132.2/three.min.js"></script>
+</head>
+<body>
+    <div id="ui-container">
+        <div id="toolbar">
+            <h2>Block Types</h2>
+            <div class="block-selector active" data-type="empty">
+                <div class="block-preview empty"></div>
+                <span>Empty (Erase)</span>
+            </div>
+            <div class="block-selector" data-type="house">
+                <div class="block-preview house"></div>
+                <span>House</span>
+            </div>
+            <div class="block-selector" data-type="road">
+                <div class="block-preview road"></div>
+                <span>Road</span>
+            </div>
+            <div class="block-selector" data-type="tree">
+                <div class="block-preview tree"></div>
+                <span>Tree/Park</span>
+            </div>
+            <div class="block-selector" data-type="water">
+                <div class="block-preview water"></div>
+                <span>Water</span>
+            </div>
+        </div>
+        
+        <div id="rules-panel">
+            <h2>City Rules</h2>
+            <div id="rules-content">
+                <div class="rule" id="house-road-rule">
+                    <span class="rule-status">⚠️</span>
+                    <span class="rule-text">Every house must be connected to a road</span>
+                </div>
+                <div class="rule" id="tree-water-rule">
+                    <span class="rule-status">⚠️</span>
+                    <span class="rule-text">Trees must not be placed on water</span>
+                </div>
+                <div class="rule" id="water-rule">
+                    <span class="rule-status">⚠️</span>
+                    <span class="rule-text">Too many water blocks</span>
+                </div>
+                <div class="rule" id="road-rule">
+                    <span class="rule-status">⚠️</span>
+                    <span class="rule-text">No roads exist</span>
+                </div>
+            </div>
+        </div>
+        
+        <div id="save-load-panel">
+            <h2>Save & Load</h2>
+            <button id="save-btn">Save City</button>
+            <button id="load-btn">Load City</button>
+            <textarea id="save-data" placeholder="City data will appear here when you save. Paste data here to load."></textarea>
+            <p>Copy the text above to save your city. Paste saved text and click "Load City" to restore.</p>
+        </div>
+    </div>
+    
+    <div id="scene-container"></div>
+    
+    <script>
+        // Load OrbitControls after Three.js is loaded
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js';
+        script.onload = function() {
+            // Load main application after OrbitControls is loaded
+            const mainScript = document.createElement('script');
+            mainScript.src = 'main.js';
+            document.head.appendChild(mainScript);
+        };
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "projects": [
+    {
+      "agent": "gpt",
+      "model": "gpt-4o",
+      "path": "agents/gpt/lego_city_build_gpt-4o/"
+    },
+    {
+      "agent": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "path": "agents/anthropic/lego_city_build_claude-sonnet-4-5-20250929/"
+    },
+    {
+      "agent": "opencode",
+      "model": "opencode",
+      "path": "agents/opencode/lego_city_build_opencode/"
+    }
+  ]
+}

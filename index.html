@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Rodeo - 3D Lego City Builder Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #00d4ff, #0099ff, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 3s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: #b0b0b0;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #00d4ff;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 212, 255, 0.2);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .agent-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 204, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+            border-color: #00d4ff;
+        }
+
+        .agent-card:hover::before {
+            opacity: 1;
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .agent-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .agent-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d4ff, #00ffcc);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .model-name {
+            font-size: 1.1rem;
+            color: #00ffcc;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-info {
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .view-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d4ff, #00ffcc);
+            color: #0f3460;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .view-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .no-agents {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .no-agents-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ Agent Rodeo</h1>
+            <p class="subtitle">3D Lego City Builder Challenge</p>
+            <p class="description">
+                Multiple AI agents compete to build the best browser-based 3D Lego city builder.
+                Each agent creates a fully functional city building experience using only HTML, CSS, and JavaScript.
+            </p>
+        </header>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Discovering agent projects...</p>
+        </div>
+
+        <div id="agents-container" class="agents-grid" style="display: none;"></div>
+
+        <div id="stats" class="stats" style="display: none;">
+            <div class="stat-item">
+                <div class="stat-value" id="total-agents">0</div>
+                <div class="stat-label">Agents</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="total-projects">0</div>
+                <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="unique-models">0</div>
+                <div class="stat-label">Unique Models</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Agent-specific icons and colors
+        const agentConfig = {
+            'anthropic': { icon: '🧠', color: '#00d4ff' },
+            'gpt': { icon: '🤖', color: '#00ffcc' },
+            'gemini': { icon: '💎', color: '#ff6b6b' },
+            'default': { icon: '⚡', color: '#fff' }
+        };
+
+        async function discoverProjects() {
+            try {
+                const agentsDir = 'agents/';
+                const projects = [];
+
+                // Try to fetch the directory listing HTML (works with some local servers)
+                try {
+                    const response = await fetch(agentsDir);
+                    if (response.ok) {
+                        const html = await response.text();
+
+                        // Parse HTML directory listing to find agent folders
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const links = doc.querySelectorAll('a[href]');
+
+                        const agentDirs = [];
+                        for (const link of links) {
+                            const href = link.getAttribute('href');
+                            // Look for directory links (usually end with /)
+                            if (href && href.endsWith('/') && !href.startsWith('.') && !href.startsWith('/') && href !== '../') {
+                                const agentName = href.replace('/', '');
+                                if (agentName && agentName !== 'projects.json') {
+                                    agentDirs.push(agentName);
+                                }
+                            }
+                        }
+
+                        // For each agent directory, try to find project folders
+                        for (const agent of agentDirs) {
+                            try {
+                                const agentResponse = await fetch(`${agentsDir}${agent}/`);
+                                if (agentResponse.ok) {
+                                    const agentHtml = await agentResponse.text();
+                                    const agentDoc = parser.parseFromString(agentHtml, 'text/html');
+                                    const agentLinks = agentDoc.querySelectorAll('a[href]');
+
+                                    for (const link of agentLinks) {
+                                        const href = link.getAttribute('href');
+                                        if (href && href.endsWith('/') && !href.startsWith('.') && !href.startsWith('/') && href !== '../') {
+                                            const projectFolder = href.replace('/', '');
+                                            if (projectFolder.startsWith('lego_city_build_')) {
+                                                const model = projectFolder.replace('lego_city_build_', '');
+                                                const projectPath = `${agentsDir}${agent}/${projectFolder}/`;
+
+                                                // Verify index.html exists
+                                                try {
+                                                    const indexResponse = await fetch(`${projectPath}index.html`);
+                                                    if (indexResponse.ok) {
+                                                        projects.push({
+                                                            agent,
+                                                            model,
+                                                            path: projectPath,
+                                                            fullPath: projectPath
+                                                        });
+                                                    }
+                                                } catch (e) {
+                                                    // Skip if index.html doesn't exist
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (e) {
+                                // Skip this agent directory
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Directory listing not available, using fallback discovery');
+                }
+
+                // If directory listing didn't work, try common agent/model combinations
+                if (projects.length === 0) {
+                    const knownAgents = ['anthropic', 'gpt', 'gemini', 'openai', 'cohere', 'meta', 'opencode', 'deepseek', 'mistral'];
+                    const modelPatterns = [
+                        'gpt-4o', 'gpt-4', 'gpt-3.5-turbo', 'gpt-4-turbo',
+                        'claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku', 'claude-sonnet-4-5-20250929',
+                        'gemini-pro', 'gemini-2.0-pro', 'gemini-1.5-pro',
+                        'command-r', 'command-r-plus',
+                        'llama-3', 'llama-2',
+                        'opencode',
+                        'deepseek-coder', 'deepseek-chat',
+                        'mistral-large', 'mistral-medium'
+                    ];
+
+                    for (const agent of knownAgents) {
+                        for (const model of modelPatterns) {
+                            const projectPath = `${agentsDir}${agent}/lego_city_build_${model}/`;
+                            try {
+                                const projectResponse = await fetch(`${projectPath}index.html`, { method: 'HEAD' });
+                                if (projectResponse.ok) {
+                                    projects.push({
+                                        agent,
+                                        model,
+                                        path: projectPath,
+                                        fullPath: projectPath
+                                    });
+                                }
+                            } catch (e) {
+                                // Project doesn't exist, continue
+                            }
+                        }
+                    }
+                }
+
+                return projects;
+            } catch (error) {
+                console.error('Error discovering projects:', error);
+                return [];
+            }
+        }
+
+        function createProjectCard(project) {
+            const config = agentConfig[project.agent] || agentConfig.default;
+
+            const card = document.createElement('div');
+            card.className = 'agent-card';
+            card.onclick = () => window.location.href = project.fullPath;
+
+            card.innerHTML = `
+                <div class="agent-header">
+                    <div class="agent-name">${project.agent}</div>
+                    <div class="agent-icon">${config.icon}</div>
+                </div>
+                <div class="model-name">${project.model}</div>
+                <div class="project-info">
+                    3D Lego-style city builder with interactive block placement,
+                    camera controls, and rule validation system.
+                </div>
+                <a href="${project.fullPath}" class="view-button">Launch Project →</a>
+            `;
+
+            return card;
+        }
+
+        function updateStats(projects) {
+            const uniqueAgents = new Set(projects.map(p => p.agent)).size;
+            const uniqueModels = new Set(projects.map(p => p.model)).size;
+
+            document.getElementById('total-agents').textContent = uniqueAgents;
+            document.getElementById('total-projects').textContent = projects.length;
+            document.getElementById('unique-models').textContent = uniqueModels;
+        }
+
+        async function init() {
+            const loading = document.getElementById('loading');
+            const container = document.getElementById('agents-container');
+            const stats = document.getElementById('stats');
+
+            // Discover projects
+            const projects = await discoverProjects();
+
+            loading.style.display = 'none';
+
+            if (projects.length === 0) {
+                container.innerHTML = `
+                    <div class="no-agents">
+                        <div class="no-agents-icon">🔍</div>
+                        <h2>No agent projects found</h2>
+                        <p style="margin-top: 10px; color: #b0b0b0;">
+                            Agent projects will appear here once they complete the challenge.
+                        </p>
+                    </div>
+                `;
+                container.style.display = 'block';
+                return;
+            }
+
+            // Sort projects by agent name, then model name
+            projects.sort((a, b) => {
+                if (a.agent !== b.agent) return a.agent.localeCompare(b.agent);
+                return a.model.localeCompare(b.model);
+            });
+
+            // Create cards
+            projects.forEach(project => {
+                const card = createProjectCard(project);
+                container.appendChild(card);
+            });
+
+            container.style.display = 'grid';
+            stats.style.display = 'flex';
+            updateStats(projects);
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
