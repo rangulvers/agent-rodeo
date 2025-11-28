@@ -3,80 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Lego City Builder</title>
+    <title>Lego City Builder 3D</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.132.2/three.min.js"></script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-    <div id="ui-container">
-        <div id="toolbar">
-            <h2>Block Types</h2>
-            <div class="block-selector active" data-type="empty">
-                <div class="block-preview empty"></div>
-                <span>Empty (Erase)</span>
+    <div id="app">
+        <div id="ui-sidebar">
+            <h1>Lego City Builder</h1>
+            
+            <div class="section">
+                <h2>Tools</h2>
+                <div id="toolbar">
+                    <button class="tool-btn active" data-type="house" title="House">🏠 House</button>
+                    <button class="tool-btn" data-type="road" title="Road">🛣️ Road</button>
+                    <button class="tool-btn" data-type="tree" title="Tree">🌳 Tree</button>
+                    <button class="tool-btn" data-type="water" title="Water">💧 Water</button>
+                    <button class="tool-btn delete-btn" data-type="empty" title="Remove">❌ Empty</button>
+                </div>
             </div>
-            <div class="block-selector" data-type="house">
-                <div class="block-preview house"></div>
-                <span>House</span>
+
+            <div class="section">
+                <h2>City Rules</h2>
+                <div id="rules-panel">
+                    <div class="rule-item" id="rule-house-road">
+                        <span class="status-icon">✅</span> Houses connected to road
+                    </div>
+                    <div class="rule-item" id="rule-tree-water">
+                        <span class="status-icon">✅</span> Trees not on water
+                    </div>
+                    <div class="rule-item" id="rule-water-limit">
+                        <span class="status-icon">✅</span> Water level safe (< 40%)
+                    </div>
+                    <div class="rule-item" id="rule-road-exist">
+                        <span class="status-icon">⚠️</span> No roads built yet
+                    </div>
+                </div>
             </div>
-            <div class="block-selector" data-type="road">
-                <div class="block-preview road"></div>
-                <span>Road</span>
+
+            <div class="section">
+                <h2>Save / Load</h2>
+                <div class="save-load-controls">
+                    <button id="btn-save">Save to JSON</button>
+                    <button id="btn-load">Load from JSON</button>
+                </div>
+                <textarea id="io-area" placeholder="Paste JSON here to load, or copy from here after saving..."></textarea>
             </div>
-            <div class="block-selector" data-type="tree">
-                <div class="block-preview tree"></div>
-                <span>Tree/Park</span>
-            </div>
-            <div class="block-selector" data-type="water">
-                <div class="block-preview water"></div>
-                <span>Water</span>
+            
+            <div class="section instructions">
+                <h3>Controls</h3>
+                <p><strong>Left Click:</strong> Place Block</p>
+                <p><strong>Right Click + Drag:</strong> Pan</p>
+                <p><strong>Left Click + Drag:</strong> Rotate</p>
+                <p><strong>Scroll:</strong> Zoom</p>
             </div>
         </div>
-        
-        <div id="rules-panel">
-            <h2>City Rules</h2>
-            <div id="rules-content">
-                <div class="rule" id="house-road-rule">
-                    <span class="rule-status">⚠️</span>
-                    <span class="rule-text">Every house must be connected to a road</span>
-                </div>
-                <div class="rule" id="tree-water-rule">
-                    <span class="rule-status">⚠️</span>
-                    <span class="rule-text">Trees must not be placed on water</span>
-                </div>
-                <div class="rule" id="water-rule">
-                    <span class="rule-status">⚠️</span>
-                    <span class="rule-text">Too many water blocks</span>
-                </div>
-                <div class="rule" id="road-rule">
-                    <span class="rule-status">⚠️</span>
-                    <span class="rule-text">No roads exist</span>
-                </div>
-            </div>
-        </div>
-        
-        <div id="save-load-panel">
-            <h2>Save & Load</h2>
-            <button id="save-btn">Save City</button>
-            <button id="load-btn">Load City</button>
-            <textarea id="save-data" placeholder="City data will appear here when you save. Paste data here to load."></textarea>
-            <p>Copy the text above to save your city. Paste saved text and click "Load City" to restore.</p>
-        </div>
+        <div id="canvas-container"></div>
     </div>
-    
-    <div id="scene-container"></div>
-    
-    <script>
-        // Load OrbitControls after Three.js is loaded
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js';
-        script.onload = function() {
-            // Load main application after OrbitControls is loaded
-            const mainScript = document.createElement('script');
-            mainScript.src = 'main.js';
-            document.head.appendChild(mainScript);
-        };
-        document.head.appendChild(script);
-    </script>
+    <script src="main.js"></script>
 </body>
 </html>

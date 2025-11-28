@@ -1,46 +1,47 @@
 # Lego City 3D Builder
 
-## How to run
-Open `index.html` in a browser.
+A browser-based 3D city builder inspired by Lego. Built with vanilla JavaScript and Three.js.
+
+## How to Run
+1.  Clone the repository.
+2.  Open `index.html` in your web browser.
+3.  No build steps or server required.
 
 ## Usage
-- **Camera Controls**: 
-  - Left-click + drag to rotate the view
-  - Right-click + drag to pan
-  - Scroll to zoom in/out
 
-- **Block Placement**:
-  - Select a block type from the left toolbar
-  - Click on the grid to place the selected block
-  - Select "Empty" to remove blocks
+### Controls
+*   **Left Click**: Place the selected block on the grid.
+*   **Right Click + Drag**: Pan the camera.
+*   **Left Click + Drag**: Rotate the camera.
+*   **Scroll**: Zoom in/out.
 
-- **Block Types**:
-  - House (Red blocks)
-  - Road (Gray blocks)
-  - Tree/Park (Green blocks)
-  - Water (Blue blocks)
-  - Empty (Eraser tool)
+### Tools
+Select a tool from the sidebar:
+*   **🏠 House**: Places a red house with a roof.
+*   **🛣️ Road**: Places a gray road tile.
+*   **🌳 Tree**: Places a tree.
+*   **💧 Water**: Places a water tile.
+*   **❌ Empty**: Removes the block at the clicked position.
 
-## City Rules
-The application enforces several city planning rules:
-1. Every house must be connected to a road
-2. Trees must not be placed on water
-3. Warning if too many blocks are water (more than 30%)
-4. Warning if no roads exist but there are other blocks
+### City Rules
+The panel on the left shows the status of your city planning:
+1.  **Houses connected to road**: Every house must be adjacent to at least one road tile.
+2.  **Trees not on water**: Trees cannot be placed adjacent to water tiles (to prevent root rot!).
+3.  **Water level safe**: Water tiles must not exceed 40% of the total city area.
+4.  **No roads built yet**: Warns if you have built houses but no roads.
 
-## Save & Load
-- Click "Save City" to generate a JSON representation of your city
-- Copy the JSON text and save it to restore your city later
-- To load a city, paste the JSON text into the text area and click "Load City"
+### Save & Load
+*   **Save**: Click "Save to JSON" to generate a text representation of your city in the text area. Copy this text to save it externally.
+*   **Load**: Paste a valid JSON string into the text area and click "Load from JSON" to restore your city.
 
-## Assumptions
-- The grid is 20x20 units with a height of 10 units
-- All blocks are placed at ground level (height 0)
-- Blocks are 1x1x1 units in size
-- The implementation uses Three.js for 3D rendering
+## Assumptions & Implementation Details
+*   The grid is fixed at 20x20 size.
+*   Blocks are placed on a single layer (ground level).
+*   "Trees not on water" is interpreted as "Trees cannot be adjacent to water" for this single-layer implementation.
+*   Uses Three.js (via CDN) for 3D rendering.
+*   Uses OrbitControls for camera interaction.
 
 ## Limitations
-- No multi-level building support
-- Simple rule checking (not spatially aware for connections)
-- Basic block types with solid colors only
-- No texture mapping or complex models
+*   No multi-story buildings.
+*   Simple block geometries.
+*   No complex road auto-tiling (roads are simple squares).
